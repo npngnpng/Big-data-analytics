@@ -1,4 +1,3 @@
-# //*[@id="content"]/div/div[2]/table/tbody/tr[1]/td[4]/a/img
 import pandas as pd
 from pandas import DataFrame
 
