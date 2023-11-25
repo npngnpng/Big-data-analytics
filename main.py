@@ -1,6 +1,12 @@
+import matplotlib
+
 from service import GetLocalVisitorCountService as local
 from service import GetOverseasVisitorCountService as overseas
 from selenium import webdriver
+import matplotlib.pyplot as plt
+
+matplotlib.rc('font', family='AppleGothic')  ## 이 두 줄을
+plt.rcParams['axes.unicode_minus'] = False
 
 driver = webdriver.Chrome()
 
@@ -36,3 +42,8 @@ print(beforeThree)
 print(afterOne)
 print(afterTwo)
 print(afterThree)
+
+plt.figure(figsize=(10, 5))
+plt.bar(beforeOne.keys(), beforeOne.values())
+plt.bar(afterTwo.keys(), afterTwo.values()),
+plt.show()
