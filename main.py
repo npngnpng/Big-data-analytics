@@ -2,11 +2,14 @@ import matplotlib
 
 from service import GetLocalVisitorCountService as local
 from service import GetOverseasVisitorCountService as overseas
+from service import CreateGraphService as graph
 from selenium import webdriver
 import matplotlib.pyplot as plt
+import numpy as np
 
-matplotlib.rc('font', family='AppleGothic')  ## 이 두 줄을
+matplotlib.rc('font', family='AppleGothic')
 plt.rcParams['axes.unicode_minus'] = False
+
 
 driver = webdriver.Chrome()
 
@@ -20,20 +23,32 @@ afterThree = local.execute(driver, 202307, 202309)
 
 driver.close()
 
+overseasBeforeOne = {}
+overseasBeforeTwo = {}
+overseasBeforeThree = {}
+overseasAfterOne = {}
+overseasAfterTwo = {}
+overseasAfterThree = {}
+
 japan = overseas.execute('Asia', '일본')
-overseas.addInDict(japan, '일본', beforeOne, beforeTwo, beforeThree, afterOne, afterTwo, afterThree)
+overseas.addInDict(japan, '일본', overseasBeforeOne, overseasBeforeTwo, overseasBeforeThree, overseasAfterOne,
+                   overseasAfterTwo, overseasAfterThree)
 
 thailand = overseas.execute('Asia', '태국')
-overseas.addInDict(thailand, '태국', beforeOne, beforeTwo, beforeThree, afterOne, afterTwo, afterThree)
+overseas.addInDict(thailand, '태국', overseasBeforeOne, overseasBeforeTwo, overseasBeforeThree, overseasAfterOne,
+                   overseasAfterTwo, overseasAfterThree)
 
 vietnam = overseas.execute('Asia', '베트남')
-overseas.addInDict(vietnam, '베트남', beforeOne, beforeTwo, beforeThree, afterOne, afterTwo, afterThree)
+overseas.addInDict(vietnam, '베트남', overseasBeforeOne, overseasBeforeTwo, overseasBeforeThree, overseasAfterOne,
+                   overseasAfterTwo, overseasAfterThree)
 
 philippines = overseas.execute('Asia', '필리핀')
-overseas.addInDict(philippines, '필리핀', beforeOne, beforeTwo, beforeThree, afterOne, afterTwo, afterThree)
+overseas.addInDict(philippines, '필리핀', overseasBeforeOne, overseasBeforeTwo, overseasBeforeThree, overseasAfterOne,
+                   overseasAfterTwo, overseasAfterThree)
 
 usa = overseas.execute('America', '미국')
-overseas.addInDict(usa, '미국', beforeOne, beforeTwo, beforeThree, afterOne, afterTwo, afterThree)
+overseas.addInDict(usa, '미국', overseasBeforeOne, overseasBeforeTwo, overseasBeforeThree, overseasAfterOne,
+                   overseasAfterTwo, overseasAfterThree)
 
 print(beforeOne)
 print(beforeTwo)
@@ -43,7 +58,15 @@ print(afterOne)
 print(afterTwo)
 print(afterThree)
 
-plt.figure(figsize=(10, 5))
-plt.bar(beforeOne.keys(), beforeOne.values())
-plt.bar(afterTwo.keys(), afterTwo.values()),
+fig, ax = plt.subplots(3, 2, figsize=(12, 15))
+
+graph.createStickGraph(ax, 0, 0, beforeOne, afterOne, '국내 1분기', 17)
+graph.createStickGraph(ax, 1, 0, beforeTwo, afterTwo, '국내 2분기', 17)
+graph.createStickGraph(ax, 2, 0, beforeThree, afterThree, '국내 3분기', 17)
+
+graph.createStickGraph(ax, 0, 1, overseasBeforeOne, overseasAfterOne, '해외 1분기', 5)
+graph.createStickGraph(ax, 1, 1, overseasBeforeTwo, overseasAfterTwo, '해외 2분기', 5)
+graph.createStickGraph(ax, 2, 1, overseasBeforeThree, overseasAfterThree, '해외 3분기', 5)
+
+plt.tight_layout()
 plt.show()
