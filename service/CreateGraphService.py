@@ -1,7 +1,8 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
-def createStickGraph(ax, x, y, before: dict, after: dict, title: str, length: int):
+def createDoubleStickGraph(ax, x, y, before: dict, after: dict, title: str, length: int):
     index = np.arange(length)
     bar_width = 0.25
 
@@ -17,3 +18,9 @@ def createStickGraph(ax, x, y, before: dict, after: dict, title: str, length: in
     ax[x, y].set_ylabel('방문자수', size=13)
     ax[x, y].set_title(title)
     ax[x, y].legend()
+
+
+def createStickGraph(value: dict, length: int):
+    index = np.arange(length)
+    plt.bar(index, value.values(), alpha=0.4, color='red', label='코로나 이전')
+    plt.xticks(index, value.keys())

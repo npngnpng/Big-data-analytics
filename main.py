@@ -3,13 +3,13 @@ import matplotlib
 from service import GetLocalVisitorCountService as local
 from service import GetOverseasVisitorCountService as overseas
 from service import CreateGraphService as graph
+from service import GetIncreaseService as increase
 from selenium import webdriver
 import matplotlib.pyplot as plt
-import numpy as np
+from collections import Counter
 
 matplotlib.rc('font', family='AppleGothic')
 plt.rcParams['axes.unicode_minus'] = False
-
 
 driver = webdriver.Chrome()
 
@@ -60,13 +60,26 @@ print(afterThree)
 
 fig, ax = plt.subplots(3, 2, figsize=(12, 15))
 
-graph.createStickGraph(ax, 0, 0, beforeOne, afterOne, '국내 1분기', 17)
-graph.createStickGraph(ax, 1, 0, beforeTwo, afterTwo, '국내 2분기', 17)
-graph.createStickGraph(ax, 2, 0, beforeThree, afterThree, '국내 3분기', 17)
+graph.createDoubleStickGraph(ax, 0, 0, beforeOne, afterOne, '국내 1분기', 17)
+graph.createDoubleStickGraph(ax, 1, 0, beforeTwo, afterTwo, '국내 2분기', 17)
+graph.createDoubleStickGraph(ax, 2, 0, beforeThree, afterThree, '국내 3분기', 17)
 
-graph.createStickGraph(ax, 0, 1, overseasBeforeOne, overseasAfterOne, '해외 1분기', 5)
-graph.createStickGraph(ax, 1, 1, overseasBeforeTwo, overseasAfterTwo, '해외 2분기', 5)
-graph.createStickGraph(ax, 2, 1, overseasBeforeThree, overseasAfterThree, '해외 3분기', 5)
+graph.createDoubleStickGraph(ax, 0, 1, overseasBeforeOne, overseasAfterOne, '해외 1분기', 5)
+graph.createDoubleStickGraph(ax, 1, 1, overseasBeforeTwo, overseasAfterTwo, '해외 2분기', 5)
+graph.createDoubleStickGraph(ax, 2, 1, overseasBeforeThree, overseasAfterThree, '해외 3분기', 5)
 
 plt.tight_layout()
+plt.show()
+
+before = dict(Counter(beforeOne) + Counter(beforeTwo) + Counter(beforeThree))
+after = dict(Counter(afterOne) + Counter(afterTwo) + Counter(afterThree))
+increaseDict = increase.execute(before, after)
+
+overseasBefore = dict(Counter(overseasBeforeOne) + Counter(overseasBeforeTwo) + Counter(overseasBeforeThree))
+overseasAfter = dict(Counter(overseasAfterOne) + Counter(overseasAfterTwo) + Counter(overseasAfterThree))
+increaseDict.update(increase.execute(overseasBefore, overseasAfter))
+
+plt.figure(figsize=(30, 10))
+graph.createStickGraph(increaseDict, 22)
+plt.grid(True, axis='y', alpha=0.5, color='gray', linestyle='--')
 plt.show()
